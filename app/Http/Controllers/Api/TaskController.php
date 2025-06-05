@@ -8,10 +8,21 @@ use App\Http\Controllers\Controller;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Task::all());
+        $status = $request->query('status');
+    
+        if ($status === 'completed') {
+            $tasks = Task::where('is_completed', true)->get();
+        } elseif ($status === 'pending') {
+            $tasks = Task::where('is_completed', false)->get();
+        } else {
+            $tasks = Task::all();
+        }
+    
+        return response()->json($tasks);
     }
+    
 
     public function store(Request $request)
     {
